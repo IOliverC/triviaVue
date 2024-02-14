@@ -42,8 +42,30 @@ const currentQuestionIndex = ref(0);
 const results = ref([]);
 let moveIntervals = []; // Array para almacenar intervalos de movimiento de GIFs
 
+const gifPosition = ref({ x: 0, y: 0 });
+
 const currentQuestion = computed(() => questions.value[currentQuestionIndex.value]);
 
+const startAnimation = () => {
+  moveGif();
+};
+const stopAnimation = () => {
+  clearInterval(moveIntervals);
+  gifPosition.value = { x: 0, y: 0 };
+};
+
+const moveGif = () => {
+  const img = document.createElement('img');
+  img.src = gifs[currentQuestionIndex.value % gifs.length];
+  img.classList.add('moving-gif');
+  document.body.appendChild(img);
+
+  moveIntervals.push(setInterval(() => {
+    gifPosition.value.x += Math.random() > 0.5 ? 1 : -1;
+    gifPosition.value.y += Math.random() > 0.5 ? 1 : -1;
+    img.style.transform = `translate(${gifPosition.value.x}px, ${gifPosition.value.y}px)`;
+  }, 10));
+};
 const checkAnswer = () => {
   results.value = [];
   const currentQuestion = questions.value[currentQuestionIndex.value];
@@ -64,22 +86,6 @@ const checkAnswer = () => {
   img.style.left = `${x}px`;
   img.style.top = `${y}px`;
   document.body.appendChild(img);
-
-  // Mover el GIF de izquierda a derecha
-  let dx = Math.random() > 0.5 ? 1 : -1; // Dirección horizontal aleatoria
-  let dy = Math.random() > 0.5 ? 1 : -1; // Dirección vertical aleatoria
-  moveIntervals.push(setInterval(() => {
-    const newX = parseFloat(img.style.left) + dx; // Nueva posición X
-    const newY = parseFloat(img.style.top) + dy; // Nueva posición Y
-    if (newX < 0 || newX + img.width > window.innerWidth) {
-      dx = -dx; // Cambia de dirección si alcanza los límites horizontales
-    }
-    if (newY < 0 || newY + img.height > window.innerHeight) {
-      dy = -dy; // Cambia de dirección si alcanza los límites verticales
-    }
-    img.style.left = `${newX}px`;
-    img.style.top = `${newY}px`;
-  }, 10)); // Ajusta la velocidad de movimiento aquí
 };
 
 const moveToNextQuestion = () => {
@@ -100,46 +106,37 @@ const gifs = [
   '/git4.gif',
   '/gif5.gif'
 ];
-
-const handleMouseOver = () => {
-  // Tu lógica para manejar el evento mouseover aquí
-};
-
-const handleMouseOut = () => {
-  // Tu lógica para manejar el evento mouseout aquí
-};
 </script>
 
 <template>
   <div id="app">
     <h1 v-bind:class="{ 'highlight': showResults }">TRIVIA</h1>
     <div class="fondoClaro">
-    <div v-if="!showResults">
-      <div v-for="(question, index) in questions" v-show="index === currentQuestionIndex" :key="index">
-        <p>{{ question.text }}</p>
-        <br>
-        <div v-for="(answer, index) in question.answers" :key="index">
-          <input type="radio" :id="answer" :value="answer" v-model="userAnswers[question.id]" :name="question.id">
-          <label :for="answer">{{ answer }}</label>
+      <div v-if="!showResults">
+        <div v-for="(question, index) in questions" v-show="index === currentQuestionIndex" :key="index">
+          <p>{{ question.text }}</p>
+          <br>
+          <div v-for="(answer, index) in question.answers" :key="index">
+            <input type="radio" :id="answer" :value="answer" v-model="userAnswers[question.id]" :name="question.id">
+            <label :for="answer">{{ answer }}</label>
+          </div>
+          <div class="image-container" v-if="question.smallImage">
+            <img :src="question.smallImage" alt="Fragmento de juego">
+          </div>
         </div>
-        <div class="image-container" v-if="question.smallImage">
-          <img :src="question.smallImage" alt="Fragmento de juego">
-        </div>
+        <button @click="checkAnswer">Comprobar respuesta</button>
       </div>
-      <button @click="checkAnswer">Comprobar respuesta</button>
-    </div>
-    <div v-else>
-      <h2>Resultados:</h2>
-      <p v-for="(result, index) in results" :key="index">{{ result }}</p>
-      <button @click="moveToNextQuestion" v-show="currentQuestionIndex + 1 < questions.length">Siguiente pregunta</button>
-      <img :src="currentQuestion.largeImage" v-if="showResults && currentQuestion.id === 3 && userAnswers[currentQuestion.id] === currentQuestion.correctAnswer" alt="Imagen completa del juego">
+      <div v-else>
+        <h2>Resultado</h2>
+        <p v-for="(result, index) in results" :key="index">{{ result }}</p>
+        <button @click="moveToNextQuestion" v-show="currentQuestionIndex + 1 < questions.length">Siguiente pregunta</button>
+        <img :src="currentQuestion.largeImage" v-if="showResults && currentQuestion.id === 3 && userAnswers[currentQuestion.id] === currentQuestion.correctAnswer" alt="Imagen completa del juego">
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
-
 .container {
   display: flex;
   justify-content: center;
