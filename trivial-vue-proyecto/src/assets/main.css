@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap');
+
+body{
+    background-color:#22192f;
+}
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
+  font-family: "Alfa Slab One", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 130px;
+  text-align: center;
+}
+
+p {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: gray;
+  display: flex;
+  justify-content: start;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+label {
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px 16px;
+  margin: 5px;
+  background-color: #22192f;
+  border-radius: 5px;
+  color: white;
+}
+
+input[type="radio"]:checked + label {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button {
+  background-color: rgb(0, 78, 0);
+  color: white;
+  border: none;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-shadow: 0 10px 10px 0 rgba(0,0,0,0.24), 0 14px 28px 0 rgba(0,0,0,0.19);
+  text-transform: uppercase;
+  margin-top: 5%;
+}
+
+button:hover{
+  background-color: rgb(3, 88, 3);
+}
+
+.results {
+  margin-top: 30px;
+}
+
+.results h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.fondoClaro{
+  background-color: #473463;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-bottom: 25px;
+  padding-top: 25px;
+  padding-right: 60px;
+}
+
+label,button,p{
+  display: flex;
+  justify-content: start;
+  font-family: "Protest Strike", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
